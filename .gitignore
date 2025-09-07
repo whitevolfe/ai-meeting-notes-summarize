@@ -1,0 +1,29 @@
+# Environment variables
+.env.local
+.env.*.local
+
+# Node modules
+node_modules/
+
+# Next.js build output
+.next/
+out/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# MacOS files
+.DS_Store
+
+# Editor files
+.vscode/
+.idea/
+
+# Tailwind cache (optional)
+.tailwindcache/
+
+# Optional coverage/lint folders
+coverage/
+dist/
