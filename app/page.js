@@ -238,7 +238,7 @@ Mike: We need to discuss the new product launch timeline..."
 
       {/* Footer */}
       <footer className="mt-16 text-center text-gray-500">
-        <p>&copy; 2024 AI Meeting Summarizer. Built with Next.js and OpenRouter AI.</p>
+        <p>&copy; 2025 all rights reserved Azeem.</p>
       </footer>
     </div>
   )
