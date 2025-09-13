@@ -1,6 +1,9 @@
 'use client'
 import { useState, useEffect } from 'react'
-import { FileText, Sparkles, Download, Upload, Loader2, CheckCircle, AlertCircle, Crown, ExternalLink } from 'lucide-react'
+import { FileText, Sparkles, Download, Upload, Loader2, CheckCircle, AlertCircle, Crown, ExternalLink, FileDown } from 'lucide-react'
+import jsPDF from 'jspdf'
+import { Document, Packer, Paragraph, TextRun } from 'docx'
+import { saveAs } from 'file-saver'
 
 export default function Home() {
   const [transcript, setTranscript] = useState('')
@@ -91,6 +94,82 @@ export default function Home() {
     document.body.appendChild(element)
     element.click()
     document.body.removeChild(element)
+  }
+
+  const handleExportPDF = () => {
+    if (!summary) return
+    
+    const doc = new jsPDF()
+    const pageWidth = doc.internal.pageSize.getWidth()
+    const margin = 20
+    const maxWidth = pageWidth - (margin * 2)
+    
+    // Add title
+    doc.setFontSize(18)
+    doc.setFont('helvetica', 'bold')
+    doc.text('Meeting Summary', margin, 30)
+    
+    // Add date
+    doc.setFontSize(10)
+    doc.setFont('helvetica', 'normal')
+    doc.text(`Generated on: ${new Date().toLocaleDateString()}`, margin, 45)
+    
+    // Add summary content
+    doc.setFontSize(12)
+    const lines = doc.splitTextToSize(summary, maxWidth)
+    doc.text(lines, margin, 60)
+    
+    // Save the PDF
+    doc.save(`meeting-summary-${new Date().toISOString().split('T')[0]}.pdf`)
+  }
+
+  const handleExportWord = async () => {
+    if (!summary) return
+    
+    const doc = new Document({
+      sections: [{
+        properties: {},
+        children: [
+          new Paragraph({
+            children: [
+              new TextRun({
+                text: "Meeting Summary",
+                bold: true,
+                size: 32,
+              }),
+            ],
+          }),
+          new Paragraph({
+            children: [
+              new TextRun({
+                text: `Generated on: ${new Date().toLocaleDateString()}`,
+                size: 20,
+              }),
+            ],
+          }),
+          new Paragraph({
+            children: [
+              new TextRun({
+                text: "",
+                size: 20,
+              }),
+            ],
+          }),
+          new Paragraph({
+            children: [
+              new TextRun({
+                text: summary,
+                size: 24,
+              }),
+            ],
+          }),
+        ],
+      }],
+    })
+
+    const buffer = await Packer.toBuffer(doc)
+    const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' })
+    saveAs(blob, `meeting-summary-${new Date().toISOString().split('T')[0]}.docx`)
   }
 
   const handleFileUpload = (event) => {
@@ -269,13 +348,33 @@ Mike: We need to discuss the new product launch timeline..."
                 AI Summary
               </h2>
               {summary && (
-                <button
-                  onClick={handleDownload}
-                  className="btn-secondary flex items-center text-sm"
-                >
-                  <Download className="h-4 w-4 mr-2" />
-                  Download
-                </button>
+                <div className="flex items-center space-x-2">
+                  <button
+                    onClick={handleDownload}
+                    className="btn-secondary flex items-center text-sm"
+                  >
+                    <Download className="h-4 w-4 mr-2" />
+                    TXT
+                  </button>
+                  {(plan === 'pro' || plan === 'business') && (
+                    <>
+                      <button
+                        onClick={handleExportPDF}
+                        className="btn-secondary flex items-center text-sm bg-red-50 text-red-700 hover:bg-red-100"
+                      >
+                        <FileDown className="h-4 w-4 mr-2" />
+                        PDF
+                      </button>
+                      <button
+                        onClick={handleExportWord}
+                        className="btn-secondary flex items-center text-sm bg-blue-50 text-blue-700 hover:bg-blue-100"
+                      >
+                        <FileDown className="h-4 w-4 mr-2" />
+                        Word
+                      </button>
+                    </>
+                  )}
+                </div>
               )}
             </div>
 
@@ -304,6 +403,18 @@ Mike: We need to discuss the new product launch timeline..."
                         >
                           View Plans →
                         </a>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Export options info for Pro/Business users */}
+                  {(plan === 'pro' || plan === 'business') && (
+                    <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                      <div className="flex items-center">
+                        <CheckCircle className="h-5 w-5 text-green-600 mr-2" />
+                        <span className="text-sm text-green-800">
+                          ✅ Export to PDF and Word formats available
+                        </span>
                       </div>
                     </div>
                   )}
