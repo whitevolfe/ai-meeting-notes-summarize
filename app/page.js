@@ -1,6 +1,6 @@
 'use client'
-import { useState } from 'react'
-import { FileText, Sparkles, Download, Upload, Loader2, CheckCircle, AlertCircle } from 'lucide-react'
+import { useState, useEffect } from 'react'
+import { FileText, Sparkles, Download, Upload, Loader2, CheckCircle, AlertCircle, Crown, ExternalLink } from 'lucide-react'
 
 export default function Home() {
   const [transcript, setTranscript] = useState('')
@@ -8,10 +8,45 @@ export default function Home() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [success, setSuccess] = useState(false)
+  const [dailyUsage, setDailyUsage] = useState(0)
+  const [plan, setPlan] = useState('free') // free, pro, business
+
+  // Load daily usage from localStorage
+  useEffect(() => {
+    const today = new Date().toDateString()
+    const stored = localStorage.getItem('dailyUsage')
+    const storedDate = localStorage.getItem('usageDate')
+    
+    if (storedDate === today) {
+      setDailyUsage(parseInt(stored) || 0)
+    } else {
+      setDailyUsage(0)
+      localStorage.setItem('dailyUsage', '0')
+      localStorage.setItem('usageDate', today)
+    }
+  }, [])
+
+  const getDailyLimit = () => {
+    switch (plan) {
+      case 'free': return 1
+      case 'pro': return 5
+      case 'business': return Infinity
+      default: return 1
+    }
+  }
+
+  const isLimitReached = () => {
+    return dailyUsage >= getDailyLimit()
+  }
 
   const handleSummarize = async () => {
     if (!transcript.trim()) {
       setError('Please enter a meeting transcript')
+      return
+    }
+
+    if (isLimitReached()) {
+      setError('Daily limit reached. Please upgrade to continue.')
       return
     }
 
@@ -36,6 +71,11 @@ export default function Home() {
 
       setSummary(data.summary)
       setSuccess(true)
+      
+      // Update daily usage
+      const newUsage = dailyUsage + 1
+      setDailyUsage(newUsage)
+      localStorage.setItem('dailyUsage', newUsage.toString())
     } catch (err) {
       setError(err.message)
     } finally {
@@ -79,10 +119,25 @@ export default function Home() {
         <h1 className="text-4xl font-bold text-gray-900 mb-4">
           AI Meeting Summarizer
         </h1>
-        <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+        <p className="text-xl text-gray-600 max-w-2xl mx-auto mb-6">
           Transform your meeting transcripts into actionable summaries with the power of AI. 
           Save time and never miss important details again.
         </p>
+        
+        {/* Usage Counter */}
+        <div className="flex justify-center items-center space-x-4 mb-6">
+          <div className="bg-gray-100 px-4 py-2 rounded-lg">
+            <span className="text-sm text-gray-600">
+              Daily Usage: {dailyUsage}/{getDailyLimit() === Infinity ? '∞' : getDailyLimit()}
+            </span>
+          </div>
+          <a 
+            href="/pricing" 
+            className="text-primary-600 hover:text-primary-700 font-medium flex items-center"
+          >
+            View Pricing <ExternalLink className="h-4 w-4 ml-1" />
+          </a>
+        </div>
       </div>
 
       {/* Main Content */}
@@ -170,6 +225,39 @@ Mike: We need to discuss the new product launch timeline..."
               Summary generated successfully!
             </div>
           )}
+
+          {/* Upgrade CTA when limit reached */}
+          {isLimitReached() && plan === 'free' && (
+            <div className="bg-gradient-to-r from-primary-50 to-purple-50 border border-primary-200 rounded-lg p-6">
+              <div className="flex items-start">
+                <Crown className="h-6 w-6 text-primary-600 mr-3 mt-1 flex-shrink-0" />
+                <div className="flex-1">
+                  <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                    You've reached your daily limit!
+                  </h3>
+                  <p className="text-gray-600 mb-4">
+                    Upgrade to Pro to get 5 summaries per day and export to PDF/Word formats.
+                  </p>
+                  <div className="flex flex-col sm:flex-row gap-3">
+                    <a
+                      href="https://payhere.lk/pay/oa86b6789"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center px-4 py-2 bg-primary-600 text-white font-medium rounded-lg hover:bg-primary-700 transition-colors"
+                    >
+                      Upgrade to Pro - $15/month
+                    </a>
+                    <a
+                      href="/pricing"
+                      className="inline-flex items-center px-4 py-2 border border-primary-600 text-primary-600 font-medium rounded-lg hover:bg-primary-50 transition-colors"
+                    >
+                      View All Plans
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Output Section */}
@@ -193,10 +281,32 @@ Mike: We need to discuss the new product launch timeline..."
 
             <div className="min-h-64">
               {summary ? (
-                <div className="bg-gray-50 p-4 rounded-lg border">
-                  <pre className="whitespace-pre-wrap text-gray-800 font-sans text-sm leading-relaxed">
-                    {summary}
-                  </pre>
+                <div className="space-y-4">
+                  <div className="bg-gray-50 p-4 rounded-lg border">
+                    <pre className="whitespace-pre-wrap text-gray-800 font-sans text-sm leading-relaxed">
+                      {summary}
+                    </pre>
+                  </div>
+                  
+                  {/* Upgrade prompt for free users */}
+                  {plan === 'free' && (
+                    <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center">
+                          <Crown className="h-5 w-5 text-blue-600 mr-2" />
+                          <span className="text-sm text-blue-800">
+                            Want to export to PDF/Word? Upgrade to Pro!
+                          </span>
+                        </div>
+                        <a
+                          href="/pricing"
+                          className="text-sm text-blue-600 hover:text-blue-700 font-medium"
+                        >
+                          View Plans →
+                        </a>
+                      </div>
+                    </div>
+                  )}
                 </div>
               ) : (
                 <div className="bg-gray-50 p-8 rounded-lg border border-dashed border-gray-300 text-center">
