@@ -460,6 +460,11 @@ Mike: We need to discuss the new product launch timeline..."
       {/* Footer */}
       <footer className="mt-16 text-center text-gray-500">
         <p>&copy; 2025 all rights reserved Fintech Digital.</p>
+        <div className="mt-4 space-x-6">
+          <a href="/privacy-policy" className="text-primary-600 hover:text-primary-700">Privacy Policy</a>
+          <a href="/refund-policy" className="text-primary-600 hover:text-primary-700">Refund Policy</a>
+          <a href="/terms" className="text-primary-600 hover:text-primary-700">Terms & Conditions</a>
+        </div>
       </footer>
     </div>
   )
