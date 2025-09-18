@@ -39,7 +39,7 @@ export default function PricingPage() {
       ],
       limitations: [],
       cta: 'Upgrade to Pro',
-      ctaLink: 'https://payhere.lk/pay/oa86b6789',
+      ctaLink: 'https://payhere.lk/pay/o12791f7a',
       popular: true,
       badge: null
     },
@@ -60,7 +60,7 @@ export default function PricingPage() {
       ],
       limitations: [],
       cta: 'Upgrade to Business',
-      ctaLink: 'https://payhere.lk/pay/oa86b6789',
+      ctaLink: 'https://payhere.lk/pay/o657e2fec',
       popular: false,
       badge: null
     }
