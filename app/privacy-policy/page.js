@@ -39,7 +39,7 @@ export default function PrivacyPolicyPage() {
               <h3 className="text-xl font-semibold text-gray-900 mb-3">1.1 Personal Information</h3>
               <ul className="list-disc list-inside text-gray-700 space-y-2 mb-4">
                 <li>Email address (when you contact us for support)</li>
-                <li>Payment information (processed securely through PayHere)</li>
+                <li>Payment information (processed securely through Stripe)</li>
                 <li>Usage patterns and preferences</li>
               </ul>
 
@@ -93,7 +93,7 @@ export default function PrivacyPolicyPage() {
                 We do not sell, trade, or rent your personal information to third parties. We may share your information only in the following circumstances:
               </p>
               <ul className="list-disc list-inside text-gray-700 space-y-2">
-                <li>With payment processors (PayHere) to process transactions</li>
+                <li>With payment processors (Stripe) to process transactions</li>
                 <li>With AI service providers that help us deliver our core functionality</li>
                 <li>When required by law or to protect our legal rights</li>
                 <li>In connection with a business transfer or merger</li>

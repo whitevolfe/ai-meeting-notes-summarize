@@ -91,7 +91,7 @@ export default function TermsPage() {
 
               <h3 className="text-xl font-semibold text-gray-900 mb-3">4.2 Payment Terms</h3>
               <ul className="list-disc list-inside text-gray-700 space-y-2 mb-4">
-                <li>All payments are processed securely through PayHere</li>
+                <li>All payments are processed securely through Stripe</li>
                 <li>Subscriptions are billed in advance on a monthly basis</li>
                 <li>Prices are subject to change with 30 days' notice</li>
                 <li>All fees are non-refundable unless otherwise specified</li>

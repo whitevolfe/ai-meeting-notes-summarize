@@ -1,6 +1,7 @@
 # Environment variables
 .env.local
 .env.*.local
+.env.production
 
 # Node modules
 node_modules/

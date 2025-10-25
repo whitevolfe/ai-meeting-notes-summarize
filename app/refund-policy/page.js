@@ -122,7 +122,7 @@ export default function RefundPolicyPage() {
               <h2 className="text-2xl font-bold text-gray-900 mb-4">6. Payment Processing</h2>
               <div className="text-gray-700 space-y-3">
                 <p>
-                  <strong>Payment Processor:</strong> All payments are processed securely through PayHere, a trusted payment gateway in Sri Lanka.
+                  <strong>Payment Processor:</strong> All payments are processed securely through Stripe, a trusted global payment gateway.
                 </p>
                 <p>
                   <strong>Refund Method:</strong> Refunds, when approved, will be processed back to the original payment method used for the purchase.
@@ -140,7 +140,7 @@ export default function RefundPolicyPage() {
               </p>
               <ul className="list-disc list-inside text-gray-700 space-y-2">
                 <li>Request a review by our management team</li>
-                <li>Contact PayHere directly if the issue is payment-related</li>
+                <li>Contact Stripe directly if the issue is payment-related</li>
                 <li>Seek resolution through consumer protection agencies in Sri Lanka</li>
               </ul>
             </section>
