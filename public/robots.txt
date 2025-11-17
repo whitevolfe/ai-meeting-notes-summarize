@@ -1,0 +1,9 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://summarizemeetings.site
+
+# Sitemaps
+Sitemap: https://summarizemeetings.site/sitemap.xml
