@@ -600,6 +600,12 @@ Mike: We need to discuss the new product launch timeline..."
             >
               Terms & Conditions
             </a>
+            <a
+              href='/blogs'
+              className='text-primary-600 hover:text-primary-700'
+            >
+              Blogs
+            </a>
           </div>
         </footer>
       </div>
